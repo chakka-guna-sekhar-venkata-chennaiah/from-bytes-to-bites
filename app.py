@@ -124,7 +124,22 @@ def main():
                 if st.button('Generate Recipes & Audio'):
                     
                     recipes=generate_recipe(recipe,uniquelist,lan_dcit[language])
-                    st.write(recipes)
+                    # Print the extracted information
+                    for recipe in recipes:
+                        st.write(f"Recipe Number: {recipe['Recipe Number']}")
+                        st.write(f"Recipe Name: {recipe['Recipe Name']}")
+                        st.write("Ingredients:")
+                        for ingredient in recipe['Ingredients']:
+                            st.write(f"- {ingredient}")
+                        st.write("Cooking Instructions:")
+                        for idx, instruction in enumerate(recipe['Cooking Instructions'], 1):
+                            st.write(f"{instruction}")
+                        st.write("Nutritional Values (per serving):")
+                        for value in recipe['Nutritional Values']:
+                            st.write(f"- {value}")
+                        
+                        st.write("\n")
+                    
                                  
                     """
                     #for i in range(recip_dict[recipe],recip_dict[recipe]+1):
