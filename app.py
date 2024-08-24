@@ -117,11 +117,8 @@ def main():
                     '3':'three'
                 }
                 choices=['Telugu','Malayalam','Hindi','Kannada','Tamil','English','Gujarati','Punjabi','Bengali']
-                cuisine=st.selectbox('Choose the preferred cuisine?',['Indian','Italian','Mexican','Chinese'])
-                #dietary_type=st.selectbox('Choose the dieatry type?',['vegetarian','non vegetarian','vegan','eggetarian'])
                 language=st.selectbox('Choose the language in which you want the recipe?',choices)
                 recipe=st.selectbox('How many different types of recipes you want??',['1','2','3'])
-                
                 frecipe=recip_dict[recipe]
                 if st.button('Generate Recipes & Audio'):
                     
