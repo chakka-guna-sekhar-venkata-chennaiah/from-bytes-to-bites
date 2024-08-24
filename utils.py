@@ -179,7 +179,7 @@ def generate_recipe(recipe,vegetable_dict,target_lang):
       translated_text = translation(gt[i],target_lang)
       trs.append(translated_text)    
 
-    return trs
+    return gt
 
 
 def audio_versions(text,lan,iter):
