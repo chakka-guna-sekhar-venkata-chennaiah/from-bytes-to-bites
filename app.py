@@ -123,7 +123,7 @@ def main():
                 if st.button('Generate Recipes & Audio'):
                     
                     final_result=generate_recipe(recipe,uniquelist,lan_dcit[language])
-                    for i in range(len(final_result):
+                    for i in range(len(final_result)):
                         st.write(final_result[i])
                     """
                     #for i in range(recip_dict[recipe],recip_dict[recipe]+1):
