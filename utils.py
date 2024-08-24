@@ -175,20 +175,7 @@ def translation(i,target_lang):
 def generate_recipe(recipe,vegetable_dict,target_lang):
     res = generate_recipe_prompt(recipe,vegetable_dict)
     gt = model(res)
-    pattern = re.compile(
-    r'\|Recipe Number\|:\s*(\d+)\s*\|Recipe Name\|:\s*([^|]+)\s*\|Ingredients\|:\s*\n(.*?)\|Cooking Instructions\|:\s*\n(.*?)\|Nutritional Values\|\s*\(per serving\):\s*\n(.*?)(?=\|Recipe Number\||\Z)',re.DOTALL)
-
-    recipes = []
-
-    for match in re.finditer(pattern, gt):
-        recipe = {
-            "Recipe Number": match.group(1),
-            "Recipe Name": match.group(2).strip(),
-            "Ingredients": match.group(3).strip(),
-            "Cooking Instructions": match.group(4).strip(),
-            "Nutritional Values": match.group(5).strip()
-        }
-        recipes.append(recipe)
+    
     #gt = gt.split('---')
     """
     trs=[]
@@ -196,7 +183,7 @@ def generate_recipe(recipe,vegetable_dict,target_lang):
       translated_text = translation(gt[i],target_lang)
       trs.append(translated_text)    
     """
-    return recipes
+    return gt
 
 
 def audio_versions(text,lan,iter):
