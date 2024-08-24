@@ -174,7 +174,7 @@ def translation(i,target_lang):
 def generate_recipe(recipe,vegetable_dict,target_lang):
     res = generate_recipe_prompt(recipe,vegetable_dict)
     gt = model(res)
-    gt = gt.split('---')
+    #gt = gt.split('---')
     """
     trs=[]
     for i in range(len(gt)):
