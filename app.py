@@ -122,10 +122,10 @@ def main():
                 frecipe=recip_dict[recipe]
                 if st.button('Generate Recipes & Audio'):
                     
-                    final_result=generate_recipe(uniquelist,lan_dcit[language],int(recipe),cuisine)
-                    #recipe_paragraphs=final_result.split('\n\n')
-                    st.write(final_result)
-                    
+                    final_result=generate_recipe(recipe,uniquelist,lan_dcit[language])
+                    for i in range(len(final_result):
+                        st.write(final_result[i])
+                    """
                     #for i in range(recip_dict[recipe],recip_dict[recipe]+1):
                         #for i in recipe_paragraphs:
                             #st.write(i)
@@ -144,7 +144,7 @@ def main():
                     st.info('Aduio Version of the Recipes')
                     st.audio(audio_path, format='audio/wav')
                    
-                      
+                    """  
 
                     
                       
