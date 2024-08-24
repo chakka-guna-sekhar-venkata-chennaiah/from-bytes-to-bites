@@ -124,13 +124,7 @@ def main():
                 if st.button('Generate Recipes & Audio'):
                     
                     recipes=generate_recipe(recipe,uniquelist,lan_dcit[language])
-                    for i in range(len(recipes)):
-                        st.write(f"Recipe Number:-{recipes[i]['Recipe Number']}")
-                        st.write(f"Recipe Name:-{recipes[i]['Recipe Name']}")
-                        st.write(f"Ingredients:-{recipes[i]['Ingredients']}")
-                        st.write(f"Cooking Instructions:-{recipes[i]['Cooking Instructions']}")
-                        st.write(f"Nutritionals:-{recipes[i]['Nutritional Values']}")
-                        st.write('---')
+                    st.write(recipes)
                                  
                     """
                     #for i in range(recip_dict[recipe],recip_dict[recipe]+1):
