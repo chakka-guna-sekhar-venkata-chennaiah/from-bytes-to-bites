@@ -129,7 +129,8 @@ def main():
                         st.write(f"Ingredients:-{recipes[i]['Ingredients']}")
                         st.write(f"Cooking Instructions:-{recipes[i]['Cooking Instructions']}")
                         st.write(f"Nutritionals:-{recipes[i]['Nutritional Values']}")
-                        st.write('---)
+                        st.write('---')
+                                 
                     """
                     #for i in range(recip_dict[recipe],recip_dict[recipe]+1):
                         #for i in recipe_paragraphs:
