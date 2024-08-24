@@ -110,38 +110,38 @@ def process_image_with_yolo(pic0):
 def generate_recipe_prompt(recipe_count, vegetable_dict):
     prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using the following vegetables. Each recipe must follow the exact structure below:
 
-|Recipe Number|: [Number]
-|Recipe Name|: [Name of the dish]
-|Ingredients|:
-[List of ingredients with quantities]
-
-|Cooking Instructions|:
-1. [First step]
-2. [Second step]
-3. [...]
-
-|Nutritional Values| (per serving):
-- Calories: [value]
-- Protein: [value]g
-- Carbohydrates: [value]g
-- Fat: [value]g
-- Fiber: [value]g
-
-Available Ingredients:
-"""
-
-    for vegetable, count in vegetable_dict.items():
-        prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
-
-    prompt += """
-Note:
-1. Use ONLY the vegetables listed above in your recipes.
-2. Be creative with vegetable combinations while ensuring delicious results.
-3. Provide clear, concise cooking instructions.
-4. Include accurate nutritional information for each recipe.
-5. Ensure each recipe is unique and different from the others.
-6. Strictly adhere to the given structure for each recipe.
-"""
+                |Recipe Number|: [Number]
+                |Recipe Name|: [Name of the dish]
+                |Ingredients|:
+                [List of ingredients with quantities]
+                
+                |Cooking Instructions|:
+                1. [First step]
+                2. [Second step]
+                3. [...]
+                
+                |Nutritional Values| (per serving):
+                - Calories: [value]
+                - Protein: [value]g
+                - Carbohydrates: [value]g
+                - Fat: [value]g
+                - Fiber: [value]g
+                
+                Available Ingredients:
+                """
+                
+                    for vegetable, count in vegetable_dict.items():
+                        prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
+                
+                    prompt += """
+                Note:
+                1. Use ONLY the vegetables listed above in your recipes.
+                2. Be creative with vegetable combinations while ensuring delicious results.
+                3. Provide clear, concise cooking instructions.
+                4. Include accurate nutritional information for each recipe.
+                5. Ensure each recipe is unique and different from the others.
+                6. Strictly adhere to the given structure for each recipe.
+                """
 
     return prompt
 
