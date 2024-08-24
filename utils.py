@@ -141,6 +141,7 @@ def generate_recipe_prompt(recipe_count, vegetable_dict):
                 4. Include accurate nutritional information for each recipe.
                 5. Ensure each recipe is unique and different from the others.
                 6. Strictly adhere to the given structure for each recipe.
+                7. Seperate the recipes with dashed lines.
                 """
 
     return prompt
@@ -173,7 +174,7 @@ def translation(i,target_lang):
 def generate_recipe(recipe,vegetable_dict,target_lang):
     res = generate_recipe_prompt(recipe,vegetable_dict)
     gt = model(res)
-    gt = gt.split('|Recipe Number|:')
+    gt = gt.split('---')
     """
     trs=[]
     for i in range(len(gt)):
