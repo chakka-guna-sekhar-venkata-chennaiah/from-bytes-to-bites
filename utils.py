@@ -149,7 +149,7 @@ Note:
 def model(recipe_prompt):
     client = OpenAI(
     base_url='https://api.groq.com/openai/v1',
-    api_key='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'
+    api_key= st.secrets['key']
     )
     response = client.chat.completions.create(
                                                 model="llama-3.1-70b-versatile",
@@ -171,8 +171,6 @@ def translation(i,target_lang):
                 
                 
 def generate_recipe(recipe,vegetable_dict,target_lang):
-    
-    model=genai.GenerativeModel('gemini-pro')
     res = generate_recipe_prompt(recipe,vegetable_dict)
     gt = model(res)
     gt = gt.split('---')
