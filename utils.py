@@ -9,6 +9,7 @@ import shutil
 from gtts import gTTS
 import google.generativeai as genai
 from googletrans import Translator
+from openai import OpenAI
 
 
 @st.cache_resource()    
@@ -104,46 +105,83 @@ def process_image_with_yolo(pic0):
         
                 
                 
-                
-                
-                
-                
-                
-def generate_recipe(vegetable_dict, target_lang,recipe,cuisine):
-    genai.configure(api_key=st.secrets['key'])
-    #palm.set_random_seed()
 
-    prompt = f"Create {recipe} nutritional, delightful and concise recipes using the following vegetables. Each recipe should include a dish name, a list of ingredients, detailed cooking instructions along with the nuritritional values serving per (cup). Numbered each recipe\n\nIngredients:\n"
+
+def generate_recipe_prompt(recipe_count, vegetable_dict):
+    prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using the following vegetables. Each recipe must follow the exact structure below:
+
+|Recipe Number|: [Number]
+|Recipe Name|: [Name of the dish]
+|Ingredients|:
+[List of ingredients with quantities]
+
+|Cooking Instructions|:
+1. [First step]
+2. [Second step]
+3. [...]
+
+|Nutritional Values| (per serving):
+- Calories: [value]
+- Protein: [value]g
+- Carbohydrates: [value]g
+- Fat: [value]g
+- Fiber: [value]g
+
+Available Ingredients:
+"""
 
     for vegetable, count in vegetable_dict.items():
         prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
 
-    prompt += "\nYour recipes should only use the mentioned vegetables and {cuisine}. Be creative, and make the instructions clear and easy to follow. These recipes should be suitable for anyone looking to enjoy quick and tasty dishes. Make sure to seperate each recipe with dashed line for better looking!"
-    
-    model=genai.GenerativeModel('gemini-pro')
-    res = model.generate_content(prompt)
-    gt = res.text.replace('*', '')  # Remove asterisk marks
-    '''
-    gt = gt.split('---')
-    gt = gt[1:]
-  
-    # Translate the generated text to the target language
-    translator = Translator()
-    
-    trs=[]
-    for i in range(len(gt)):
+    prompt += """
+Note:
+1. Use ONLY the vegetables listed above in your recipes.
+2. Be creative with vegetable combinations while ensuring delicious results.
+3. Provide clear, concise cooking instructions.
+4. Include accurate nutritional information for each recipe.
+5. Ensure each recipe is unique and different from the others.
+6. Strictly adhere to the given structure for each recipe.
+"""
 
-      translated_text = translator.translate(gt[i], src='en', dest=target_lang)
-      trs.append(translated_text.text)    
-    return trs
-    '''
-    
-    # Translate the generated text to the target language
+    return prompt
+
+
+def model(recipe_prompt):
+    client = OpenAI(
+    base_url='https://api.groq.com/openai/v1',
+    api_key='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'
+    )
+    response = client.chat.completions.create(
+                                                model="llama-3.1-70b-versatile",
+                                                messages=[
+                                                    {"role": "user", "content":recipe_prompt},
+                                                ]
+                                                )
+
+    return response.choices[0].message.content
+
+
+
+def translation(i,target_lang):
     translator = Translator()
-    translated_text = translator.translate(gt, src='en', dest=target_lang)
-    
+    translated_text = translator.translate(i, src='en', dest=target_lang)
     return translated_text.text
     
+                
+                
+                
+def generate_recipe(recipe,vegetable_dict,target_lang):
+    
+    model=genai.GenerativeModel('gemini-pro')
+    res = generate_recipe_prompt(recipe,vegetable_dict)
+    gt = model(res)
+    gt = gt.split('---')
+    trs=[]
+    for i in range(len(gt)):
+      translated_text = translation(gt[i],target_lang)
+      trs.append(translated_text)    
+
+    return trs
 
 
 def audio_versions(text,lan,iter):
