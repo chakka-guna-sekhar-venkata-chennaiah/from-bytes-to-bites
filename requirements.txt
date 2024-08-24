@@ -1,7 +1,7 @@
 opencv-python-headless
 ultralytics
 streamlit
-googletrans==4.0.0.rc1
 gTTS
 st-copy-to-clipboard
 openai
+googletrans==4.0.0.rc1
