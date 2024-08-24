@@ -170,11 +170,42 @@ def translation(i,target_lang):
     return translated_text.text
     
                 
-                
+
+def extract_recipes(text):
+    # Split the text into individual recipes
+    recipes = re.split(r'\|Recipe Number\|:', text)[1:]
+    
+    processed_recipes = []
+    
+    for recipe in recipes:
+        recipe_dict = {}
+        
+        # Extract Recipe Number
+        recipe_dict['Recipe Number'] = re.search(r'(\d+)', recipe).group(1)
+        
+        # Extract Recipe Name
+        recipe_dict['Recipe Name'] = re.search(r'\|Recipe Name\|:\s*(.+?)\s*\|', recipe).group(1)
+        
+        # Extract Ingredients
+        ingredients = re.search(r'\|Ingredients\|:(.*?)\|Cooking Instructions\|:', recipe, re.DOTALL).group(1)
+        recipe_dict['Ingredients'] = [ing.strip() for ing in ingredients.strip().split('\n')]
+        
+        # Extract Cooking Instructions
+        instructions = re.search(r'\|Cooking Instructions\|:(.*?)\|Nutritional Values\|', recipe, re.DOTALL).group(1)
+        recipe_dict['Cooking Instructions'] = [inst.strip() for inst in instructions.strip().split('\n')]
+        
+        # Extract Nutritional Values
+        nutritional_values = re.search(r'\|Nutritional Values\|\s*\(per serving\):(.*?)$', recipe, re.DOTALL).group(1)
+        recipe_dict['Nutritional Values'] = [nv.strip() for nv in nutritional_values.strip().split('\n')]
+        
+        processed_recipes.append(recipe_dict)
+    
+    return processed_recipes
                 
 def generate_recipe(recipe,vegetable_dict,target_lang):
     res = generate_recipe_prompt(recipe,vegetable_dict)
     gt = model(res)
+    gt = extract_recipes(gt)
     
     #gt = gt.split('---')
     """
