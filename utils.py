@@ -180,7 +180,7 @@ def generate_recipe(recipe,vegetable_dict,target_lang):
 
     recipes = []
 
-    for match in re.finditer(pattern, a):
+    for match in re.finditer(pattern, gt):
         recipe = {
             "Recipe Number": match.group(1),
             "Recipe Name": match.group(2).strip(),
