@@ -130,10 +130,10 @@ def generate_recipe_prompt(recipe_count, vegetable_dict):
                 Available Ingredients:
                 """
                 
-                    for vegetable, count in vegetable_dict.items():
-                        prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
+    for vegetable, count in vegetable_dict.items():
+        prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
                 
-                    prompt += """
+    prompt += """
                 Note:
                 1. Use ONLY the vegetables listed above in your recipes.
                 2. Be creative with vegetable combinations while ensuring delicious results.
