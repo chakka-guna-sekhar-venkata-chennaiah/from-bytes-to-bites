@@ -112,7 +112,9 @@ def generate_recipe_prompt(recipe_count, vegetable_dict):
     prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using the following vegetables. Each recipe must follow the exact structure below:
 
                 Recipe Number: Number
+
                 Recipe Name: Name of the dish
+                
                 Ingredients:
                 List of ingredients with quantities
                 
@@ -128,7 +130,6 @@ def generate_recipe_prompt(recipe_count, vegetable_dict):
                 - Fat: [value]g
                 - Fiber: [value]g
                 
-                Available Ingredients:
                 """
                 
     for vegetable, count in vegetable_dict.items():
