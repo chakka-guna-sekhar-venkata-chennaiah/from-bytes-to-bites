@@ -182,7 +182,11 @@ def parse_recipes(text):
                     line = re.sub(r'^\d+\.\s*', '', line)
                 recipe[current_section].append(line)
         
-        recipes.append(recipe)
+        # Only add the recipe if it has a name, ingredients, and instructions
+        if (recipe['Recipe Name'] != 'Unnamed Recipe' and 
+            recipe['Ingredients'] and 
+            recipe['Cooking Instructions']):
+            recipes.append(recipe)
     
     return recipes
 
