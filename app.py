@@ -115,7 +115,7 @@ def main():
                             recipes = generate_recipe(recipe_count, uniquelist, lan_dict[language])
                             
                             if recipes:
-                                for i, recipe in enumerate(recipes, 1):
+                                for recipe in recipes:
                                     st.subheader(f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}")
                                     
                                     st.write("**కావలసినవి:**")
@@ -128,15 +128,16 @@ def main():
                                     
                                     st.write("**పోషక విలువలు (ప్రతి సేవకు):**")
                                     for value in recipe['పోషక విలువలు (ప్రతి సేవకు)']:
-                                        st.write(value)
+                                        if value is not None:
+                                            st.write(value)
                                     
                                     # Generate and display audio
                                     recipe_text = f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}. "
                                     recipe_text += "కావలసినవి: " + ", ".join(recipe['కావలసినవి']) + ". "
                                     recipe_text += "వంట సూచనలు: " + ". ".join(recipe['వంట సూచనలు']) + ". "
-                                    recipe_text += "పోషక విలువలు: " + ", ".join(recipe['పోషక విలువలు (ప్రతి సేవకు)'])
+                                    recipe_text += "పోషక విలువలు: " + ", ".join([v for v in recipe['పోషక విలువలు (ప్రతి సేవకు)'] if v is not None])
                                     
-                                    audio_path = audio_versions(recipe_text, lan_dict[language], i)
+                                    audio_path = audio_versions(recipe_text, lan_dict[language], recipe['రెసిపీ సంఖ్య'])
                                     st.audio(audio_path)
                                 
                                 st.balloons()

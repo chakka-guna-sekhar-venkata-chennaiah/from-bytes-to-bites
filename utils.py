@@ -241,9 +241,9 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
     
     return translated_recipes
 
-def audio_versions(text, lan, iter):
-    tts = gTTS(text=text, lang=lan)
-    audio_path = f'recipe_{iter}.wav'
+def audio_versions(text, lan, recipe_number):
+    tts = gTTS(text=text, lang=lan, slow=False)
+    audio_path = f'recipe_{recipe_number}.mp3'
     tts.save(audio_path)
     return audio_path
 
