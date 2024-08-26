@@ -179,48 +179,33 @@ def parse_recipes(text):
     
     return recipes
 
-def translate_recipe(recipe, target_lang):
-    translator = GoogleTranslator(source='auto', target=target_lang)
-    translated_recipe = {}
-    
-    for key, value in recipe.items():
-        if isinstance(value, list):
-            translated_recipe[key] = [translator.translate(item) for item in value]
-        else:
-            translated_recipe[key] = translator.translate(value)
-    
-    return translated_recipe
-
 def generate_recipe(recipe_count, vegetable_dict, target_lang):
-    client = OpenAI(
-        base_url='https://api.groq.com/openai/v1',
-        api_key=st.secrets['key']
-    )
-    
     prompt = generate_recipe_prompt(recipe_count, vegetable_dict)
+    response = model(prompt)  # Assuming you have a model function that generates the recipes
+    recipes = parse_recipes(response)
     
-    try:
-        response = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
-            messages=[
-                {"role": "user", "content": prompt},
-            ]
-        )
-        
-        if response.choices[0].finish_reason == "stop":
-            recipes = parse_recipes(response.choices[0].message.content)
-            translated_recipes = [translate_recipe(recipe, target_lang) for recipe in recipes]
-            return translated_recipes
-        else:
-            st.error("Failed to generate complete recipes. Please try again.")
-            return None
+    translated_recipes = []
+    for recipe in recipes:
+        translated_recipe = {}
+        for key, value in recipe.items():
+            if isinstance(value, list):
+                translated_recipe[key] = [translation(item, target_lang) for item in value]
+            else:
+                translated_recipe[key] = translation(value, target_lang)
+        translated_recipes.append(translated_recipe)
     
-    except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
-        return None
+    return translated_recipes
 
-def audio_versions(text, lang, iter):
-    tts = gTTS(text=text, lang=lang)
-    audio_path = f'recipe_{iter}.mp3'
+def translation(i,target_lang):
+    translator = GoogleTranslator(source='auto', target=target_lang)
+    translated_text = translator.translate(i, src='en', dest=target_lang)
+    return translated_text.text
+    
+                
+
+                
+def audio_versions(text, lan, iter):
+    tts = gTTS(text=text, lang=lan)
+    audio_path = f'recipe_{iter}.wav'
     tts.save(audio_path)
     return audio_path
