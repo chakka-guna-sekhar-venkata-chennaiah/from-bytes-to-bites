@@ -203,11 +203,7 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
         ]
     )
     
-    
-    
     recipes = parse_recipes(response.choices[0].message.content)
-    
-   
     
     # Translate structural elements
     structure_translations = {
@@ -224,16 +220,14 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
         for key, value in recipe.items():
             translated_key = structure_translations.get(key, key)
             if isinstance(value, list):
-                translated_recipe[translated_key] = [translation(item, target_lang) for item in value]
-            elif value and value != 'Unnamed Recipe':  # Only translate non-empty values and actual recipe names
+                translated_recipe[translated_key] = [translation(item, target_lang) for item in value if item != '---']
+            elif value and value != 'Unnamed Recipe':
                 translated_recipe[translated_key] = translation(value, target_lang)
             else:
-                translated_recipe[translated_key] = value  # Keep empty values and 'Unnamed Recipe' as is
+                translated_recipe[translated_key] = value
         translated_recipes.append(translated_recipe)
     
-    
-    
-    return translated_recipes
+    return translated_recipes, structure_translations
 
 def audio_versions(text, lan, recipe_number):
     tts = gTTS(text=text, lang=lan, slow=False)

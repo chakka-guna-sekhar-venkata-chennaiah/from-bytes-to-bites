@@ -105,39 +105,39 @@ def main():
                     'Bengali': 'bn'
                 }
                 
-                choices = ['Telugu', 'Malayalam', 'Hindi', 'Kannada', 'Tamil', 'English', 'Gujarati', 'Punjabi', 'Bengali']
+                choices = list(lan_dict.keys())
                 language = st.selectbox('Choose the language in which you want the recipe?', choices)
                 recipe_count = st.selectbox('How many different types of recipes you want??', [1, 2, 3])
                 
                 if st.button('Generate Recipes & Audio'):
                     with st.spinner('Generating recipes...'):
                         try:
-                            recipes = generate_recipe(recipe_count, uniquelist, lan_dict[language])
+                            recipes, structure_translations = generate_recipe(recipe_count, uniquelist, lan_dict[language])
                             
                             if recipes:
                                 for recipe in recipes:
-                                    st.subheader(f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}")
+                                    st.subheader(f"{recipe[structure_translations['Recipe Number']]}: {recipe[structure_translations['Recipe Name']]}")
                                     
-                                    st.write("**కావలసినవి:**")
-                                    for ingredient in recipe['కావలసినవి']:
+                                    st.write(f"**{structure_translations['Ingredients']}:**")
+                                    for ingredient in recipe[structure_translations['Ingredients']]:
                                         st.write(ingredient)
                                     
-                                    st.write("**వంట సూచనలు:**")
-                                    for j, instruction in enumerate(recipe['వంట సూచనలు'], 1):
+                                    st.write(f"**{structure_translations['Cooking Instructions']}:**")
+                                    for j, instruction in enumerate(recipe[structure_translations['Cooking Instructions']], 1):
                                         st.write(f"{j}. {instruction}")
                                     
-                                    st.write("**పోషక విలువలు (ప్రతి సేవకు):**")
-                                    for value in recipe['పోషక విలువలు (ప్రతి సేవకు)']:
+                                    st.write(f"**{structure_translations['Nutritional Values']}:**")
+                                    for value in recipe[structure_translations['Nutritional Values']]:
                                         if value is not None and value != '---':
                                             st.write(value)
                                     
                                     # Generate and display audio
-                                    recipe_text = f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}. "
-                                    recipe_text += "కావలసినవి: " + ", ".join(recipe['కావలసినవి']) + ". "
-                                    recipe_text += "వంట సూచనలు: " + ". ".join(recipe['వంట సూచనలు']) + ". "
-                                    recipe_text += "పోషక విలువలు: " + ", ".join([v for v in recipe['పోషక విలువలు (ప్రతి సేవకు)'] if v is not None and v != '---'])
+                                    recipe_text = f"{recipe[structure_translations['Recipe Number']]}: {recipe[structure_translations['Recipe Name']]}. "
+                                    recipe_text += f"{structure_translations['Ingredients']}: " + ", ".join(recipe[structure_translations['Ingredients']]) + ". "
+                                    recipe_text += f"{structure_translations['Cooking Instructions']}: " + ". ".join(recipe[structure_translations['Cooking Instructions']]) + ". "
+                                    recipe_text += f"{structure_translations['Nutritional Values']}: " + ", ".join([v for v in recipe[structure_translations['Nutritional Values']] if v is not None and v != '---'])
                                     
-                                    audio_path = audio_versions(recipe_text, lan_dict[language], recipe['రెసిపీ సంఖ్య'])
+                                    audio_path = audio_versions(recipe_text, lan_dict[language], recipe[structure_translations['Recipe Number']])
                                     st.audio(audio_path)
                                 
                                 st.balloons()
