@@ -165,7 +165,7 @@ def model(recipe_prompt):
 
 
 def translation(i,target_lang):
-    translator = Translator()
+    translator = GoogleTranslator(source='auto', target=target_lang)
     translated_text = translator.translate(i, src='en', dest=target_lang)
     return translated_text.text
     
