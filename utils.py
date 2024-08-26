@@ -205,7 +205,7 @@ def extract_recipes(text):
 def generate_recipe(recipe,vegetable_dict,target_lang):
     res = generate_recipe_prompt(recipe,vegetable_dict)
     gt = model(res)
-    gt = extract_recipes(gt)
+    gts = extract_recipes(gt)
     
     #gt = gt.split('---')
     """
