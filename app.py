@@ -131,27 +131,7 @@ def main():
                 if st.button('Generate Recipes & Audio'):
                     
                     recipes=generate_recipe(frecipe,uniquelist,lan_dcit[language])
-
-                    cols = st.columns(recipe_count)
-                    for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
-                        with col:
-                            st.subheader(f"Recipe {i}: {recipe['Recipe Name']}")
-                            st.write("**Ingredients:**")
-                            for ingredient in recipe['Ingredients']:
-                                st.write(f"- {ingredient}")
-                            
-                            st.write("**Cooking Instructions:**")
-                            for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
-                                st.write(f"{j}. {instruction}")
-                            
-                            st.write("**Nutritional Values:**")
-                            for value in recipe['Nutritional Values']:
-                                st.write(f"- {value}")
-                            
-                            # Generate and display audio
-                            recipe_text = f"Recipe {i}: {recipe['Recipe Name']}. Ingredients: {', '.join(recipe['Ingredients'])}. Instructions: {'. '.join(recipe['Cooking Instructions'])}"
-                            audio_path = audio_versions(recipe_text, lan_dcit[language], i)
-                            st.audio(audio_path)
+                    st.write(recipes)
                     
                     st.balloons()
                     

@@ -111,12 +111,12 @@ def process_image_with_yolo(pic0):
 def generate_recipe_prompt(recipe_count, vegetable_dict):
     prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using the following vegetables. Each recipe must follow the exact structure below:
 
-                |Recipe Number|: [Number]
-                |Recipe Name|: [Name of the dish]
-                |Ingredients|:
-                [List of ingredients with quantities]
+                Recipe Number: Number
+                Recipe Name: Name of the dish
+                Ingredients:
+                List of ingredients with quantities
                 
-                |Cooking Instructions|:
+                Cooking Instructions:
                 1. [First step]
                 2. [Second step]
                 3. [...]
@@ -171,53 +171,13 @@ def translation(i,target_lang):
     
                 
 
-def extract_recipes(text):
-    # Split the text into individual recipes
-    recipes = re.split(r'\|Recipe Number\|:', text)[1:]
-    
-    processed_recipes = []
-    
-    for recipe in recipes:
-        recipe_dict = {}
-        
-        # Extract Recipe Number
-        recipe_dict['Recipe Number'] = re.search(r'(\d+)', recipe).group(1)
-        
-        # Extract Recipe Name
-        recipe_dict['Recipe Name'] = re.search(r'\|Recipe Name\|:\s*(.+?)\s*\|', recipe).group(1)
-        
-        # Extract Ingredients
-        ingredients = re.search(r'\|Ingredients\|:(.*?)\|Cooking Instructions\|:', recipe, re.DOTALL).group(1)
-        recipe_dict['Ingredients'] = [ing.strip() for ing in ingredients.strip().split('\n')]
-        
-        # Extract Cooking Instructions
-        instructions = re.search(r'\|Cooking Instructions\|:(.*?)\|Nutritional Values\|', recipe, re.DOTALL).group(1)
-        recipe_dict['Cooking Instructions'] = [inst.strip() for inst in instructions.strip().split('\n')]
-        
-        # Extract Nutritional Values
-        nutritional_values = re.search(r'\|Nutritional Values\|\s*\(per serving\):(.*?)$', recipe, re.DOTALL).group(1)
-        recipe_dict['Nutritional Values'] = [nv.strip() for nv in nutritional_values.strip().split('\n')]
-        
-        processed_recipes.append(recipe_dict)
-    
-    return processed_recipes
                 
 def generate_recipe(recipe_count, vegetable_dict, target_lang):
     res = generate_recipe_prompt(recipe_count, vegetable_dict)
     gt = model(res)
-    recipes = extract_recipes(gt)
     
-    translated_recipes = []
-    for recipe in recipes:
-        translated_recipe = {}
-        for key, value in recipe.items():
-            if isinstance(value, list):
-                translated_recipe[key] = [translation(item, target_lang) for item in value]
-            else:
-                translated_recipe[key] = translation(value, target_lang)
-        translated_recipes.append(translated_recipe)
     
-    return translated_recipes
+    return gt
 
 
 def audio_versions(text, lan, iter):
