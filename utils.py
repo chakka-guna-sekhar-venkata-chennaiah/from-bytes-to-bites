@@ -207,7 +207,7 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
     )
     try:
         response = client.chat.completions.create(
-            model="mixtral-8x7b-32768",
+            model="llama3-70b-8192",
             messages=[
                 {"role": "user", "content": prompt},
             ]
