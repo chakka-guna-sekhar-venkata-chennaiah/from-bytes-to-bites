@@ -4,4 +4,4 @@ streamlit
 gTTS
 st-copy-to-clipboard
 openai
-googletrans==3.1.0a0
+deep-translator
