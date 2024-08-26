@@ -118,21 +118,21 @@ def main():
                                 cols = st.columns(recipe_count)
                                 for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
                                     with col:
-                                        st.subheader(f"Recipe {recipe['Recipe Number']}: {recipe['Recipe Name']}")
-                                        st.write("**Ingredients:**")
+                                        st.subheader(f"{recipe['Recipe Number']}: {recipe['Recipe Name']}")
+                                        st.write(f"**{recipe['Ingredients']}:**")
                                         for ingredient in recipe['Ingredients']:
                                             st.write(f"- {ingredient}")
                                         
-                                        st.write("**Cooking Instructions:**")
+                                        st.write(f"**{recipe['Cooking Instructions']}:**")
                                         for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
                                             st.write(f"{j}. {instruction}")
                                         
-                                        st.write("**Nutritional Values (per serving):**")
+                                        st.write(f"**{recipe['Nutritional Values']}:**")
                                         for value in recipe['Nutritional Values']:
                                             st.write(f"- {value}")
                                         
                                         # Generate and display audio
-                                        recipe_text = f"Recipe {recipe['Recipe Number']}: {recipe['Recipe Name']}. Ingredients: {', '.join(recipe['Ingredients'])}. Instructions: {'. '.join(recipe['Cooking Instructions'])}"
+                                        recipe_text = f"{recipe['Recipe Number']}: {recipe['Recipe Name']}. {recipe['Ingredients']}: {', '.join(recipe['Ingredients'])}. {recipe['Cooking Instructions']}: {'. '.join(recipe['Cooking Instructions'])}"
                                         audio_path = audio_versions(recipe_text, lan_dict[language], i)
                                         st.audio(audio_path)
                                 
