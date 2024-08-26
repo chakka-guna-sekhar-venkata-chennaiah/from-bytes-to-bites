@@ -115,38 +115,29 @@ def main():
                             recipes = generate_recipe(recipe_count, uniquelist, lan_dict[language])
                             
                             if recipes:
-                                cols = st.columns(recipe_count)
-                                for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
-                                    with col:
-                                        recipe_name = recipe.get('Recipe Name', '')
-                                        if not recipe_name or recipe_name == 'Unnamed Recipe':
-                                            recipe_name = translation(f'Recipe {i}', lan_dict[language])
-                                        st.subheader(f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe_name}")
-                                        
-                                        if 'Ingredients' in recipe:
-                                            st.write(f"**{recipe['Ingredients']}:**")
-                                            for ingredient in recipe.get('Ingredients', []):
-                                                st.write(f"- {ingredient}")
-                                        
-                                        if 'Cooking Instructions' in recipe:
-                                            st.write(f"**{recipe['Cooking Instructions']}:**")
-                                            for j, instruction in enumerate(recipe.get('Cooking Instructions', []), 1):
-                                                st.write(f"{j}. {instruction}")
-                                        
-                                        if 'Nutritional Values' in recipe:
-                                            st.write(f"**{recipe['Nutritional Values']}:**")
-                                            for value in recipe.get('Nutritional Values', []):
-                                                st.write(f"- {value}")
-                                        
-                                        # Generate and display audio
-                                        recipe_text = f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe_name}. "
-                                        if 'Ingredients' in recipe:
-                                            recipe_text += f"{recipe['Ingredients']}: {', '.join(recipe.get('Ingredients', []))}. "
-                                        if 'Cooking Instructions' in recipe:
-                                            recipe_text += f"{recipe['Cooking Instructions']}: {'. '.join(recipe.get('Cooking Instructions', []))}."
-                                        
-                                        audio_path = audio_versions(recipe_text, lan_dict[language], i)
-                                        st.audio(audio_path)
+                                for i, recipe in enumerate(recipes, 1):
+                                    st.subheader(f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}")
+                                    
+                                    st.write("**కావలసినవి:**")
+                                    for ingredient in recipe['కావలసినవి']:
+                                        st.write(ingredient)
+                                    
+                                    st.write("**వంట సూచనలు:**")
+                                    for j, instruction in enumerate(recipe['వంట సూచనలు'], 1):
+                                        st.write(f"{j}. {instruction}")
+                                    
+                                    st.write("**పోషక విలువలు (ప్రతి సేవకు):**")
+                                    for value in recipe['పోషక విలువలు (ప్రతి సేవకు)']:
+                                        st.write(value)
+                                    
+                                    # Generate and display audio
+                                    recipe_text = f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}. "
+                                    recipe_text += "కావలసినవి: " + ", ".join(recipe['కావలసినవి']) + ". "
+                                    recipe_text += "వంట సూచనలు: " + ". ".join(recipe['వంట సూచనలు']) + ". "
+                                    recipe_text += "పోషక విలువలు: " + ", ".join(recipe['పోషక విలువలు (ప్రతి సేవకు)'])
+                                    
+                                    audio_path = audio_versions(recipe_text, lan_dict[language], i)
+                                    st.audio(audio_path)
                                 
                                 st.balloons()
                             else:
