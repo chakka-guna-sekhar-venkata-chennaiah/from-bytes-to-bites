@@ -209,9 +209,7 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
     
     recipes = parse_recipes(response.choices[0].message.content)
     
-    # Debug: Print the parsed recipes
-    st.write("Parsed recipes:")
-    st.write(recipes)
+   
     
     # Translate structural elements
     structure_translations = {
@@ -235,9 +233,7 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
                 translated_recipe[translated_key] = value  # Keep empty values and 'Unnamed Recipe' as is
         translated_recipes.append(translated_recipe)
     
-    # Debug: Print the translated recipes
-    st.write("Translated recipes:")
-    st.write(translated_recipes)
+    
     
     return translated_recipes
 
