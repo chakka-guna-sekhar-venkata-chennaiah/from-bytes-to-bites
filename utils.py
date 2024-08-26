@@ -154,7 +154,7 @@ def parse_recipes(text):
     for i, raw_recipe in enumerate(raw_recipes, 1):
         recipe = {
             'Recipe Number': f'Recipe {i}',
-            'Recipe Name': '',
+            'Recipe Name': 'Unnamed Recipe',
             'Ingredients': [],
             'Cooking Instructions': [],
             'Nutritional Values': []
@@ -182,8 +182,7 @@ def parse_recipes(text):
                     line = re.sub(r'^\d+\.\s*', '', line)
                 recipe[current_section].append(line)
         
-        if recipe['Recipe Name']:  # Only add non-empty recipes
-            recipes.append(recipe)
+        recipes.append(recipe)
     
     return recipes
 
@@ -221,10 +220,10 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
             translated_key = structure_translations.get(key, key)
             if isinstance(value, list):
                 translated_recipe[translated_key] = [translation(item, target_lang) for item in value]
-            elif value:  # Only translate non-empty values
+            elif value and value != 'Unnamed Recipe':  # Only translate non-empty values and actual recipe names
                 translated_recipe[translated_key] = translation(value, target_lang)
             else:
-                translated_recipe[translated_key] = value  # Keep empty values as is
+                translated_recipe[translated_key] = value  # Keep empty values and 'Unnamed Recipe' as is
         translated_recipes.append(translated_recipe)
     
     return translated_recipes

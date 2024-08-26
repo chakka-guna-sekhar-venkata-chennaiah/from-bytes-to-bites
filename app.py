@@ -118,7 +118,10 @@ def main():
                                 cols = st.columns(recipe_count)
                                 for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
                                     with col:
-                                        st.subheader(f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe.get('Recipe Name', 'Unnamed Recipe')}")
+                                        recipe_name = recipe.get('Recipe Name', 'Unnamed Recipe')
+                                        if recipe_name == 'Unnamed Recipe':
+                                            recipe_name = translation('Unnamed Recipe', lan_dict[language])
+                                        st.subheader(f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe_name}")
                                         
                                         if 'Ingredients' in recipe:
                                             st.write(f"**{recipe['Ingredients']}:**")
@@ -136,7 +139,7 @@ def main():
                                                 st.write(f"- {value}")
                                         
                                         # Generate and display audio
-                                        recipe_text = f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe.get('Recipe Name', 'Unnamed Recipe')}. "
+                                        recipe_text = f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe_name}. "
                                         if 'Ingredients' in recipe:
                                             recipe_text += f"{recipe['Ingredients']}: {', '.join(recipe.get('Ingredients', []))}. "
                                         if 'Cooking Instructions' in recipe:
