@@ -5,3 +5,4 @@ gTTS
 st-copy-to-clipboard
 openai
 deep-translator
+tenacity

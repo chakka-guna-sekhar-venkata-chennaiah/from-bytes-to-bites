@@ -111,9 +111,9 @@ def main():
                 
                 if st.button('Generate Recipes & Audio'):
                     with st.spinner('Generating recipes...'):
-                        try:
-                            recipes, structure_translations = generate_recipe(recipe_count, uniquelist, lan_dict[language])
-                            
+                        recipes, structure_translations, status = generate_recipe(recipe_count, uniquelist, lan_dict[language])
+                        
+                        if status == 200:
                             if recipes:
                                 for recipe in recipes:
                                     st.subheader(f"{recipe[structure_translations['Recipe Number']]}: {recipe[structure_translations['Recipe Name']]}")
@@ -143,8 +143,9 @@ def main():
                                 st.balloons()
                             else:
                                 st.warning("No recipes were generated. Please try again.")
-                        except Exception as e:
-                            st.error(f"An error occurred while generating recipes: {str(e)}")
+                        else:
+                            st.error(f"An error occurred while generating recipes: {status}")
+                            st.info("Please try again in a few moments.")
             else:
                 message()
 
