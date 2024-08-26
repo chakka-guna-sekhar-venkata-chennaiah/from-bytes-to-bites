@@ -77,74 +77,68 @@ st.image('working.jpg',use_column_width=True)
 #sidebar_option = st.sidebar.radio("Select an option", ("Take picture for prediction"))
 
 def main():
-    
-    
-    
-    
-   
-    
     if st.checkbox('Take a picture for Recipe & Audio Generation'):
-    
-        
-        image, original_image,image_filename= upload()
-        if original_image is not None and image_filename is not None and len(image_filename)!=0 and st.checkbox('Start Identifying Veggies!!'):  # Check if original_image is not None
+        image, original_image, image_filename = upload()
+        if original_image is not None and image_filename is not None and len(image_filename)!=0 and st.checkbox('Start Identifying Veggies!!'):
             st.info('Wait for the results...!')
-                #image1=cv2.imread(image)
-            pic0=image
-            uniquelist=process_image_with_yolo(pic0)
+            pic0 = image
+            uniquelist = process_image_with_yolo(pic0)
             if uniquelist:
-                vegetables=uniquelist.keys()
-                counts=uniquelist.values()
-                data={
-                    'Veggie':vegetables,
-                    'Counts':counts
+                vegetables = uniquelist.keys()
+                counts = uniquelist.values()
+                data = {
+                    'Veggie': vegetables,
+                    'Counts': counts
                 }   
-                df=pd.DataFrame(data)
+                df = pd.DataFrame(data)
                 st.write(df)
-                lan_dcit={
-                        'Telugu':'te',
-                        'Malayalam':'ml',
-                        'Hindi':'hi',
-                        'Kannada':'kn',
-                        'Tamil':'ta',
-                        'English':'en',
-                        'Gujarati':'gu',
-                        'Punjabi':'pa',
-                        'Bengali':'bn'
-                    }
-                recip_dict={
-                    '1':'one',
-                    '2':'two',
-                    '3':'three'
+                
+                lan_dict = {
+                    'Telugu': 'te',
+                    'Malayalam': 'ml',
+                    'Hindi': 'hi',
+                    'Kannada': 'kn',
+                    'Tamil': 'ta',
+                    'English': 'en',
+                    'Gujarati': 'gu',
+                    'Punjabi': 'pa',
+                    'Bengali': 'bn'
                 }
-
-                recipe_num={
-                    '1':1,
-                    '2':2,
-                    '3':3
-                }
-                choices=['Telugu','Malayalam','Hindi','Kannada','Tamil','English','Gujarati','Punjabi','Bengali']
-                language=st.selectbox('Choose the language in which you want the recipe?',choices)
-                recipe=st.selectbox('How many different types of recipes you want??',['1','2','3'])
-                recipe_count=recipe_num[recipe]
-                frecipe=recip_dict[recipe]
+                
+                choices = ['Telugu', 'Malayalam', 'Hindi', 'Kannada', 'Tamil', 'English', 'Gujarati', 'Punjabi', 'Bengali']
+                language = st.selectbox('Choose the language in which you want the recipe?', choices)
+                recipe_count = st.selectbox('How many different types of recipes you want??', [1, 2, 3])
+                
                 if st.button('Generate Recipes & Audio'):
+                    recipes = generate_recipe(recipe_count, uniquelist, lan_dict[language])
                     
-                    recipes=generate_recipe(frecipe,uniquelist,lan_dcit[language])
-                    st.write(recipes)
-                    
-                    st.balloons()
-                    
-                      
-                                                
+                    if recipes:
+                        cols = st.columns(recipe_count)
+                        for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
+                            with col:
+                                st.subheader(f"Recipe {i}: {recipe['Recipe Name']}")
+                                st.write("**Ingredients:**")
+                                for ingredient in recipe['Ingredients']:
+                                    st.write(f"- {ingredient}")
+                                
+                                st.write("**Cooking Instructions:**")
+                                for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
+                                    st.write(f"{j}. {instruction}")
+                                
+                                st.write("**Nutritional Values:**")
+                                for value in recipe['Nutritional Values']:
+                                    st.write(f"- {value}")
+                                
+                                # Generate and display audio
+                                recipe_text = f"Recipe {i}: {recipe['Recipe Name']}. Ingredients: {', '.join(recipe['Ingredients'])}. Instructions: {'. '.join(recipe['Cooking Instructions'])}"
+                                audio_path = audio_versions(recipe_text, lan_dict[language], i)
+                                st.audio(audio_path)
+                        
+                        st.balloons()
+                    else:
+                        st.error("Failed to generate recipes. Please try again.")
             else:
                 message()
-                
-        
-            
 
-   
 if __name__ == '__main__':
-    
-   
     main()

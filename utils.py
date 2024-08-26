@@ -108,81 +108,119 @@ def process_image_with_yolo(pic0):
                 
 
 
+
 def generate_recipe_prompt(recipe_count, vegetable_dict):
-    prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using the following vegetables. Each recipe must follow the exact structure below:
+    prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using ONLY the following vegetables. Each recipe MUST strictly follow this exact structure:
 
-                Recipe Number: Number
+    Recipe Number: [number]
+    Recipe Name: [name]
+    Ingredients:
+    - [ingredient 1 with quantity]
+    - [ingredient 2 with quantity]
+    ...
+    Cooking Instructions:
+    1. [step 1]
+    2. [step 2]
+    ...
+    Nutritional Values (per serving):
+    - Calories: [value]
+    - Protein: [value]g
+    - Carbohydrates: [value]g
+    - Fat: [value]g
+    - Fiber: [value]g
 
-                Recipe Name: Name of the dish
-                
-                Ingredients:
-                List of ingredients with quantities
-                
-                Cooking Instructions:
-                1. [First step]
-                2. [Second step]
-                3. [...]
-                
-                Nutritional Values(per serving):
-                - Calories: [value]
-                - Protein: [value]g
-                - Carbohydrates: [value]g
-                - Fat: [value]g
-                - Fiber: [value]g
-                
-                """
-                
+    Available vegetables:
+    """
+    
     for vegetable, count in vegetable_dict.items():
         prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
-                
+    
     prompt += """
-                Note:
-                1. Use ONLY the vegetables listed above in your recipes.
-                2. Be creative with vegetable combinations while ensuring delicious results.
-                3. Provide clear, concise cooking instructions.
-                4. Include accurate nutritional information for each recipe.
-                5. Ensure each recipe is unique and different from the others.
-                6. Strictly adhere to the given structure for each recipe.
-                7. Seperate the recipes with dashed lines.
-                """
-
+    Notes:
+    1. Use ONLY the vegetables listed above in your recipes.
+    2. Be creative with vegetable combinations while ensuring delicious results.
+    3. Provide clear, concise cooking instructions.
+    4. Include accurate nutritional information for each recipe.
+    5. Ensure each recipe is unique and different from the others.
+    6. Strictly adhere to the given structure for each recipe.
+    7. Separate the recipes with a line of dashes (---).
+    """
+    
     return prompt
 
+def parse_recipes(text):
+    recipes = []
+    raw_recipes = text.split('---')
+    
+    for raw_recipe in raw_recipes:
+        recipe = {}
+        lines = raw_recipe.strip().split('\n')
+        
+        for line in lines:
+            if line.startswith('Recipe Number:'):
+                recipe['Recipe Number'] = line.split(':')[1].strip()
+            elif line.startswith('Recipe Name:'):
+                recipe['Recipe Name'] = line.split(':')[1].strip()
+            elif line == 'Ingredients:':
+                recipe['Ingredients'] = []
+            elif line.startswith('- ') and 'Ingredients' in recipe:
+                recipe['Ingredients'].append(line[2:])
+            elif line == 'Cooking Instructions:':
+                recipe['Cooking Instructions'] = []
+            elif line[0].isdigit() and '. ' in line and 'Cooking Instructions' in recipe:
+                recipe['Cooking Instructions'].append(line.split('. ')[1])
+            elif line == 'Nutritional Values (per serving):':
+                recipe['Nutritional Values'] = []
+            elif line.startswith('- ') and 'Nutritional Values' in recipe:
+                recipe['Nutritional Values'].append(line[2:])
+        
+        if recipe:
+            recipes.append(recipe)
+    
+    return recipes
 
-def model(recipe_prompt):
-    client = OpenAI(
-    base_url='https://api.groq.com/openai/v1',
-    api_key= st.secrets['key']
-    )
-    response = client.chat.completions.create(
-                                                model="llama-3.1-70b-versatile",
-                                                messages=[
-                                                    {"role": "user", "content":recipe_prompt},
-                                                ]
-                                                )
-
-    return response.choices[0].message.content
-
-
-
-def translation(i,target_lang):
+def translate_recipe(recipe, target_lang):
     translator = GoogleTranslator(source='auto', target=target_lang)
-    translated_text = translator.translate(i, src='en', dest=target_lang)
-    return translated_text.text
+    translated_recipe = {}
     
-                
+    for key, value in recipe.items():
+        if isinstance(value, list):
+            translated_recipe[key] = [translator.translate(item) for item in value]
+        else:
+            translated_recipe[key] = translator.translate(value)
+    
+    return translated_recipe
 
-                
 def generate_recipe(recipe_count, vegetable_dict, target_lang):
-    res = generate_recipe_prompt(recipe_count, vegetable_dict)
-    gt = model(res)
+    client = OpenAI(
+        base_url='https://api.groq.com/openai/v1',
+        api_key=st.secrets['key']
+    )
     
+    prompt = generate_recipe_prompt(recipe_count, vegetable_dict)
     
-    return gt
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.1-70b-versatile",
+            messages=[
+                {"role": "user", "content": prompt},
+            ]
+        )
+        
+        if response.choices[0].finish_reason == "stop":
+            recipes = parse_recipes(response.choices[0].message.content)
+            translated_recipes = [translate_recipe(recipe, target_lang) for recipe in recipes]
+            return translated_recipes
+        else:
+            st.error("Failed to generate complete recipes. Please try again.")
+            return None
+    
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        return None
 
-
-def audio_versions(text, lan, iter):
-    tts = gTTS(text=text, lang=lan)
-    audio_path = f'recipe_{iter}.wav'
+def audio_versions(text, lang, iter):
+    tts = gTTS(text=text, lang=lang)
+    audio_path = f'recipe_{iter}.mp3'
     tts.save(audio_path)
     return audio_path
