@@ -150,31 +150,40 @@ def generate_recipe_prompt(recipe_count, vegetable_dict):
 
 def parse_recipes(text):
     recipes = []
-    raw_recipes = text.split('---')
+    raw_recipes = re.split(r'\n-{3,}\n', text)
     
     for raw_recipe in raw_recipes:
-        recipe = {}
-        lines = raw_recipe.strip().split('\n')
+        recipe = {
+            'Recipe Number': '',
+            'Recipe Name': '',
+            'Ingredients': [],
+            'Cooking Instructions': [],
+            'Nutritional Values': []
+        }
+        current_section = None
         
-        for line in lines:
+        for line in raw_recipe.strip().split('\n'):
+            line = line.strip()
+            if not line:
+                continue
+            
             if line.startswith('Recipe Number:'):
-                recipe['Recipe Number'] = line.split(':')[1].strip()
+                recipe['Recipe Number'] = line.split(':', 1)[1].strip()
             elif line.startswith('Recipe Name:'):
-                recipe['Recipe Name'] = line.split(':')[1].strip()
+                recipe['Recipe Name'] = line.split(':', 1)[1].strip()
             elif line == 'Ingredients:':
-                recipe['Ingredients'] = []
-            elif line.startswith('- ') and 'Ingredients' in recipe:
-                recipe['Ingredients'].append(line[2:])
+                current_section = 'Ingredients'
             elif line == 'Cooking Instructions:':
-                recipe['Cooking Instructions'] = []
-            elif line[0].isdigit() and '. ' in line and 'Cooking Instructions' in recipe:
-                recipe['Cooking Instructions'].append(line.split('. ')[1])
+                current_section = 'Cooking Instructions'
             elif line == 'Nutritional Values (per serving):':
-                recipe['Nutritional Values'] = []
-            elif line.startswith('- ') and 'Nutritional Values' in recipe:
-                recipe['Nutritional Values'].append(line[2:])
+                current_section = 'Nutritional Values'
+            elif current_section:
+                if current_section == 'Cooking Instructions':
+                    # Remove numbering from instructions
+                    line = re.sub(r'^\d+\.\s*', '', line)
+                recipe[current_section].append(line)
         
-        if recipe:
+        if recipe['Recipe Name']:  # Only add non-empty recipes
             recipes.append(recipe)
     
     return recipes

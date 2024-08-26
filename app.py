@@ -110,33 +110,37 @@ def main():
                 recipe_count = st.selectbox('How many different types of recipes you want??', [1, 2, 3])
                 
                 if st.button('Generate Recipes & Audio'):
-                    recipes = generate_recipe(recipe_count, uniquelist, lan_dict[language])
-                    
-                    if recipes:
-                        cols = st.columns(recipe_count)
-                        for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
-                            with col:
-                                st.subheader(f"Recipe {i}: {recipe['Recipe Name']}")
-                                st.write("**Ingredients:**")
-                                for ingredient in recipe['Ingredients']:
-                                    st.write(f"- {ingredient}")
+                    with st.spinner('Generating recipes...'):
+                        try:
+                            recipes = generate_recipe(recipe_count, uniquelist, lan_dict[language])
+                            
+                            if recipes:
+                                cols = st.columns(recipe_count)
+                                for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
+                                    with col:
+                                        st.subheader(f"Recipe {recipe['Recipe Number']}: {recipe['Recipe Name']}")
+                                        st.write("**Ingredients:**")
+                                        for ingredient in recipe['Ingredients']:
+                                            st.write(f"- {ingredient}")
+                                        
+                                        st.write("**Cooking Instructions:**")
+                                        for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
+                                            st.write(f"{j}. {instruction}")
+                                        
+                                        st.write("**Nutritional Values (per serving):**")
+                                        for value in recipe['Nutritional Values']:
+                                            st.write(f"- {value}")
+                                        
+                                        # Generate and display audio
+                                        recipe_text = f"Recipe {recipe['Recipe Number']}: {recipe['Recipe Name']}. Ingredients: {', '.join(recipe['Ingredients'])}. Instructions: {'. '.join(recipe['Cooking Instructions'])}"
+                                        audio_path = audio_versions(recipe_text, lan_dict[language], i)
+                                        st.audio(audio_path)
                                 
-                                st.write("**Cooking Instructions:**")
-                                for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
-                                    st.write(f"{j}. {instruction}")
-                                
-                                st.write("**Nutritional Values:**")
-                                for value in recipe['Nutritional Values']:
-                                    st.write(f"- {value}")
-                                
-                                # Generate and display audio
-                                recipe_text = f"Recipe {i}: {recipe['Recipe Name']}. Ingredients: {', '.join(recipe['Ingredients'])}. Instructions: {'. '.join(recipe['Cooking Instructions'])}"
-                                audio_path = audio_versions(recipe_text, lan_dict[language], i)
-                                st.audio(audio_path)
-                        
-                        st.balloons()
-                    else:
-                        st.error("Failed to generate recipes. Please try again.")
+                                st.balloons()
+                            else:
+                                st.warning("No recipes were generated. Please try again.")
+                        except Exception as e:
+                            st.error(f"An error occurred while generating recipes: {str(e)}")
             else:
                 message()
 
