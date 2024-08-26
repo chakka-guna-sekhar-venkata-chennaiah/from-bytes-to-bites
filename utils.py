@@ -190,8 +190,6 @@ def translation(text, target_lang):
     translator = GoogleTranslator(source='auto', target=target_lang)
     return translator.translate(text)
 
-
-
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(3))
 def generate_recipe(recipe_count, vegetable_dict, target_lang):
     prompt = generate_recipe_prompt(recipe_count, vegetable_dict)
@@ -201,7 +199,7 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
     )
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
+            model="llama3-70b-8192",
             messages=[
                 {"role": "user", "content": prompt},
             ]
