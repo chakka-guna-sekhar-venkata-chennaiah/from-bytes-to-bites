@@ -9,7 +9,7 @@ import shutil
 from gtts import gTTS
 import re
 
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from openai import OpenAI
 
 
