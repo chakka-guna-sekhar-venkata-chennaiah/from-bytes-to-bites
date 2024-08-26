@@ -144,7 +144,7 @@ def main():
                             else:
                                 st.warning("No recipes were generated. Please try again.")
                         else:
-                            st.error(f"An error occurred while generating recipes: {status}")
+                            #st.error(f"An error occurred while generating recipes: {status}")
                             st.info("Please try again in a few moments.")
             else:
                 message()
