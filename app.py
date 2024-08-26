@@ -124,6 +124,9 @@ def main():
                 if st.button('Generate Recipes & Audio'):
                     
                     recipes=generate_recipe(recipe,uniquelist,lan_dcit[language])
+
+                    st.write(recipes)
+                    '''
                     # Print the extracted information
                     for recipe in recipes:
                         st.write(f"Recipe Number: {recipe['Recipe Number']}")
@@ -139,6 +142,7 @@ def main():
                             st.write(f"- {value}")
                         
                         st.write("\n")
+                    '''
                     
                                  
                     """
