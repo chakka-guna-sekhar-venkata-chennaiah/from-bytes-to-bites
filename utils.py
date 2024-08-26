@@ -179,6 +179,19 @@ def parse_recipes(text):
     
     return recipes
 
+def model(recipe_prompt):
+    client = OpenAI(
+    base_url='https://api.groq.com/openai/v1',
+    api_key= st.secrets['key']
+    )
+    response = client.chat.completions.create(
+                                                model="llama-3.1-70b-versatile",
+                                                messages=[
+                                                    {"role": "user", "content":recipe_prompt},
+                                                ]
+                                                )
+
+    return response.choices[0].message.content
 def generate_recipe(recipe_count, vegetable_dict, target_lang):
     prompt = generate_recipe_prompt(recipe_count, vegetable_dict)
     response = model(prompt)  # Assuming you have a model function that generates the recipes
