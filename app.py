@@ -128,14 +128,14 @@ def main():
                                     
                                     st.write("**పోషక విలువలు (ప్రతి సేవకు):**")
                                     for value in recipe['పోషక విలువలు (ప్రతి సేవకు)']:
-                                        if value is not None:
+                                        if value is not None and value != '---':
                                             st.write(value)
                                     
                                     # Generate and display audio
                                     recipe_text = f"{recipe['రెసిపీ సంఖ్య']}: {recipe['రెసిపీ పేరు']}. "
                                     recipe_text += "కావలసినవి: " + ", ".join(recipe['కావలసినవి']) + ". "
                                     recipe_text += "వంట సూచనలు: " + ". ".join(recipe['వంట సూచనలు']) + ". "
-                                    recipe_text += "పోషక విలువలు: " + ", ".join([v for v in recipe['పోషక విలువలు (ప్రతి సేవకు)'] if v is not None])
+                                    recipe_text += "పోషక విలువలు: " + ", ".join([v for v in recipe['పోషక విలువలు (ప్రతి సేవకు)'] if v is not None and v != '---'])
                                     
                                     audio_path = audio_versions(recipe_text, lan_dict[language], recipe['రెసిపీ సంఖ్య'])
                                     st.audio(audio_path)
