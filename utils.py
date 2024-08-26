@@ -109,42 +109,46 @@ def process_image_with_yolo(pic0):
 
 
 def generate_recipe_prompt(recipe_count, vegetable_dict):
-    prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using ONLY the following vegetables. Each recipe MUST strictly follow this exact structure:
+    prompt = f"""Create {recipe_count} nutritional, delightful and concise Indian cuisine recipes using the following vegetables. Each recipe must follow the exact structure below:
 
-    Recipe Number: [number]
-    Recipe Name: [name]
-    Ingredients:
-    - [ingredient 1 with quantity]
-    - [ingredient 2 with quantity]
-    ...
-    Cooking Instructions:
-    1. [step 1]
-    2. [step 2]
-    ...
-    Nutritional Values (per serving):
-    - Calories: [value]
-    - Protein: [value]g
-    - Carbohydrates: [value]g
-    - Fat: [value]g
-    - Fiber: [value]g
+                Recipe Number: Number
 
-    Available vegetables:
-    """
-    
+                Recipe Name: Name of the Indian dish
+                
+                Ingredients:
+                List of ingredients with quantities
+                
+                Cooking Instructions:
+                1. [First step]
+                2. [Second step]
+                3. [...]
+                
+                Nutritional Values(per serving):
+                - Calories: [value]
+                - Protein: [value]g
+                - Carbohydrates: [value]g
+                - Fat: [value]g
+                - Fiber: [value]g
+                
+                """
+                
     for vegetable, count in vegetable_dict.items():
         prompt += f"- {vegetable} ({count} {'piece' if count == 1 else 'pieces'})\n"
-    
+                
     prompt += """
-    Notes:
-    1. Use ONLY the vegetables listed above in your recipes.
-    2. Be creative with vegetable combinations while ensuring delicious results.
-    3. Provide clear, concise cooking instructions.
-    4. Include accurate nutritional information for each recipe.
-    5. Ensure each recipe is unique and different from the others.
-    6. Strictly adhere to the given structure for each recipe.
-    7. Separate the recipes with a line of dashes (---).
-    """
-    
+                Note:
+                1. Use ONLY the vegetables listed above in your recipes.
+                2. Ensure all recipes are authentic Indian dishes or Indian-inspired variations.
+                3. Be creative with vegetable combinations while ensuring delicious results suitable for Indian tastes.
+                4. Provide clear, concise cooking instructions that include typical Indian cooking methods and spices.
+                5. Include accurate nutritional information for each recipe.
+                6. Ensure each recipe is unique and different from the others, showcasing the diversity of Indian cuisine.
+                7. Strictly adhere to the given structure for each recipe.
+                8. Separate the recipes with dashed lines.
+                9. Consider regional Indian dishes that use these vegetables.
+                10. If possible, mention which region of India the dish is from or inspired by.
+                """
+
     return prompt
 
 def parse_recipes(text):
