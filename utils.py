@@ -111,9 +111,9 @@ def process_image_with_yolo(pic0):
 def generate_recipe_prompt(recipe_count, vegetable_dict):
     prompt = f"""Create {recipe_count} nutritional, delightful and concise recipes using the following vegetables. Each recipe must follow the exact structure below:
 
-                Recipe Number: Number
-                Recipe Name: Name of the dish
-                Ingredients:
+                Recipe Number
+                Recipe Name
+                Ingredients
                 List of ingredients with quantities
                 
                 Cooking Instructions:
@@ -121,7 +121,7 @@ def generate_recipe_prompt(recipe_count, vegetable_dict):
                 2. [Second step]
                 3. [...]
                 
-                |Nutritional Values| (per serving):
+                Nutritional Values (per serving):
                 - Calories: [value]
                 - Protein: [value]g
                 - Carbohydrates: [value]g
