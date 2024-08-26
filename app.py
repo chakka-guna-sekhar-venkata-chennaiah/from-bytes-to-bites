@@ -118,21 +118,30 @@ def main():
                                 cols = st.columns(recipe_count)
                                 for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
                                     with col:
-                                        st.subheader(f"{recipe['Recipe Number']}: {recipe['Recipe Name']}")
-                                        st.write(f"**{recipe['Ingredients']}:**")
-                                        for ingredient in recipe['Ingredients']:
-                                            st.write(f"- {ingredient}")
+                                        st.subheader(f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe.get('Recipe Name', 'Unnamed Recipe')}")
                                         
-                                        st.write(f"**{recipe['Cooking Instructions']}:**")
-                                        for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
-                                            st.write(f"{j}. {instruction}")
+                                        if 'Ingredients' in recipe:
+                                            st.write(f"**{recipe['Ingredients']}:**")
+                                            for ingredient in recipe.get('Ingredients', []):
+                                                st.write(f"- {ingredient}")
                                         
-                                        st.write(f"**{recipe['Nutritional Values']}:**")
-                                        for value in recipe['Nutritional Values']:
-                                            st.write(f"- {value}")
+                                        if 'Cooking Instructions' in recipe:
+                                            st.write(f"**{recipe['Cooking Instructions']}:**")
+                                            for j, instruction in enumerate(recipe.get('Cooking Instructions', []), 1):
+                                                st.write(f"{j}. {instruction}")
+                                        
+                                        if 'Nutritional Values' in recipe:
+                                            st.write(f"**{recipe['Nutritional Values']}:**")
+                                            for value in recipe.get('Nutritional Values', []):
+                                                st.write(f"- {value}")
                                         
                                         # Generate and display audio
-                                        recipe_text = f"{recipe['Recipe Number']}: {recipe['Recipe Name']}. {recipe['Ingredients']}: {', '.join(recipe['Ingredients'])}. {recipe['Cooking Instructions']}: {'. '.join(recipe['Cooking Instructions'])}"
+                                        recipe_text = f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe.get('Recipe Name', 'Unnamed Recipe')}. "
+                                        if 'Ingredients' in recipe:
+                                            recipe_text += f"{recipe['Ingredients']}: {', '.join(recipe.get('Ingredients', []))}. "
+                                        if 'Cooking Instructions' in recipe:
+                                            recipe_text += f"{recipe['Cooking Instructions']}: {'. '.join(recipe.get('Cooking Instructions', []))}."
+                                        
                                         audio_path = audio_versions(recipe_text, lan_dict[language], i)
                                         st.audio(audio_path)
                                 

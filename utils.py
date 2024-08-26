@@ -82,7 +82,6 @@ def process_image_with_yolo(pic0):
                 labelslist.append(clabel)
                 #process_line(line, image_np2)
                 
-          
            
         labels_count = {}
         for label in labelslist:
@@ -152,9 +151,9 @@ def parse_recipes(text):
     recipes = []
     raw_recipes = re.split(r'\n-{3,}\n', text)
     
-    for raw_recipe in raw_recipes:
+    for i, raw_recipe in enumerate(raw_recipes, 1):
         recipe = {
-            'Recipe Number': '',
+            'Recipe Number': f'Recipe {i}',
             'Recipe Name': '',
             'Ingredients': [],
             'Cooking Instructions': [],
@@ -175,7 +174,7 @@ def parse_recipes(text):
                 current_section = 'Ingredients'
             elif line == 'Cooking Instructions:':
                 current_section = 'Cooking Instructions'
-            elif line == 'Nutritional Values (per serving):':
+            elif line.startswith('Nutritional Values'):
                 current_section = 'Nutritional Values'
             elif current_section:
                 if current_section == 'Cooking Instructions':
@@ -222,8 +221,10 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
             translated_key = structure_translations.get(key, key)
             if isinstance(value, list):
                 translated_recipe[translated_key] = [translation(item, target_lang) for item in value]
-            else:
+            elif value:  # Only translate non-empty values
                 translated_recipe[translated_key] = translation(value, target_lang)
+            else:
+                translated_recipe[translated_key] = value  # Keep empty values as is
         translated_recipes.append(translated_recipe)
     
     return translated_recipes
