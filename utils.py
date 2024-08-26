@@ -203,9 +203,7 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
         ]
     )
     
-    # Debug: Print the raw response
-    st.write("Raw AI response:")
-    st.write(response.choices[0].message.content)
+    
     
     recipes = parse_recipes(response.choices[0].message.content)
     
