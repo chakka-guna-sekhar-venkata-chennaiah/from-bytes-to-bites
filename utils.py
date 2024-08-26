@@ -223,8 +223,8 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
                 translated_key = structure_translations.get(key, key)
                 if isinstance(value, list):
                     translated_recipe[translated_key] = [translation(item, target_lang) for item in value if item != '---']
-                elif value and value != 'Unnamed Recipe':
-                    translated_recipe[translated_key] = translation(value, target_lang)
+                #elif value and value != 'Unnamed Recipe':
+                #    translated_recipe[translated_key] = translation(value, target_lang)
                 else:
                     translated_recipe[translated_key] = value
             translated_recipes.append(translated_recipe)
