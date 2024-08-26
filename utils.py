@@ -202,24 +202,26 @@ def extract_recipes(text):
     
     return processed_recipes
                 
-def generate_recipe(recipe,vegetable_dict,target_lang):
-    res = generate_recipe_prompt(recipe,vegetable_dict)
+def generate_recipe(recipe_count, vegetable_dict, target_lang):
+    res = generate_recipe_prompt(recipe_count, vegetable_dict)
     gt = model(res)
-    gts = extract_recipes(gt)
+    recipes = extract_recipes(gt)
     
-    #gt = gt.split('---')
-    """
-    trs=[]
-    for i in range(len(gt)):
-      translated_text = translation(gt[i],target_lang)
-      trs.append(translated_text)    
-    """
-    return gt
+    translated_recipes = []
+    for recipe in recipes:
+        translated_recipe = {}
+        for key, value in recipe.items():
+            if isinstance(value, list):
+                translated_recipe[key] = [translation(item, target_lang) for item in value]
+            else:
+                translated_recipe[key] = translation(value, target_lang)
+        translated_recipes.append(translated_recipe)
+    
+    return translated_recipes
 
 
-def audio_versions(text,lan,iter):
+def audio_versions(text, lan, iter):
     tts = gTTS(text=text, lang=lan)
-    audio_path='recipe '+str(iter)+'.wav.'
+    audio_path = f'recipe_{iter}.wav'
     tts.save(audio_path)
     return audio_path
-    

@@ -117,55 +117,43 @@ def main():
                     '2':'two',
                     '3':'three'
                 }
+
+                recipe_num={
+                    '1':1,
+                    '2':2,
+                    '3':3
+                }
                 choices=['Telugu','Malayalam','Hindi','Kannada','Tamil','English','Gujarati','Punjabi','Bengali']
                 language=st.selectbox('Choose the language in which you want the recipe?',choices)
                 recipe=st.selectbox('How many different types of recipes you want??',['1','2','3'])
+                recipe_count=recipe_num[recipe]
                 frecipe=recip_dict[recipe]
                 if st.button('Generate Recipes & Audio'):
                     
-                    recipes=generate_recipe(recipe,uniquelist,lan_dcit[language])
+                    recipes=generate_recipe(frecipe,uniquelist,lan_dcit[language])
 
-                    st.write(recipes)
-                    '''
-                    # Print the extracted information
-                    for recipe in recipes:
-                        st.write(f"Recipe Number: {recipe['Recipe Number']}")
-                        st.write(f"Recipe Name: {recipe['Recipe Name']}")
-                        st.write("Ingredients:")
-                        for ingredient in recipe['Ingredients']:
-                            st.write(f"- {ingredient}")
-                        st.write("Cooking Instructions:")
-                        for idx, instruction in enumerate(recipe['Cooking Instructions'], 1):
-                            st.write(f"{instruction}")
-                        st.write("Nutritional Values (per serving):")
-                        for value in recipe['Nutritional Values']:
-                            st.write(f"- {value}")
-                        
-                        st.write("\n")
-                    '''
+                    cols = st.columns(recipe_count)
+                    for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
+                        with col:
+                            st.subheader(f"Recipe {i}: {recipe['Recipe Name']}")
+                            st.write("**Ingredients:**")
+                            for ingredient in recipe['Ingredients']:
+                                st.write(f"- {ingredient}")
+                            
+                            st.write("**Cooking Instructions:**")
+                            for j, instruction in enumerate(recipe['Cooking Instructions'], 1):
+                                st.write(f"{j}. {instruction}")
+                            
+                            st.write("**Nutritional Values:**")
+                            for value in recipe['Nutritional Values']:
+                                st.write(f"- {value}")
+                            
+                            # Generate and display audio
+                            recipe_text = f"Recipe {i}: {recipe['Recipe Name']}. Ingredients: {', '.join(recipe['Ingredients'])}. Instructions: {'. '.join(recipe['Cooking Instructions'])}"
+                            audio_path = audio_versions(recipe_text, lan_dcit[language], i)
+                            st.audio(audio_path)
                     
-                                 
-                    """
-                    #for i in range(recip_dict[recipe],recip_dict[recipe]+1):
-                        #for i in recipe_paragraphs:
-                            #st.write(i)
-                        #st.write('-'*100)
-                    text_to_speech = final_result
-                    tts = gTTS(text=text_to_speech, lang=lan_dcit[language])
-                    
-                        # Save the audio file
-                    audio_path = 'saved_audio.wav'
-                    tts.save(audio_path)
-                    
-                        # Play the audio
                     st.balloons()
-                    with st.spinner('Wait for the audio version................'):
-                        time.sleep(3)
-                    st.info('Aduio Version of the Recipes')
-                    st.audio(audio_path, format='audio/wav')
-                   
-                    """  
-
                     
                       
                                                 
