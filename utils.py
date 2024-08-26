@@ -188,23 +188,23 @@ def parse_recipes(text):
     
     return recipes
 
-def model(recipe_prompt):
-    client = OpenAI(
-    base_url='https://api.groq.com/openai/v1',
-    api_key= st.secrets['key']
-    )
-    response = client.chat.completions.create(
-                                                model="llama-3.1-70b-versatile",
-                                                messages=[
-                                                    {"role": "user", "content":recipe_prompt},
-                                                ]
-                                                )
+def translation(text, target_lang):
+    translator = GoogleTranslator(source='auto', target=target_lang)
+    return translator.translate(text)
 
-    return response.choices[0].message.content
 def generate_recipe(recipe_count, vegetable_dict, target_lang):
     prompt = generate_recipe_prompt(recipe_count, vegetable_dict)
-    response = model(prompt)  # Assuming you have a model function that generates the recipes
-    recipes = parse_recipes(response)
+    client = OpenAI(
+        base_url='https://api.groq.com/openai/v1',
+        api_key=st.secrets['key']
+    )
+    response = client.chat.completions.create(
+        model="llama-3.1-70b-versatile",
+        messages=[
+            {"role": "user", "content": prompt},
+        ]
+    )
+    recipes = parse_recipes(response.choices[0].message.content)
     
     translated_recipes = []
     for recipe in recipes:
@@ -218,16 +218,9 @@ def generate_recipe(recipe_count, vegetable_dict, target_lang):
     
     return translated_recipes
 
-def translation(i,target_lang):
-    translator = GoogleTranslator(source='auto', target=target_lang)
-    translated_text = translator.translate(i, src='en', dest=target_lang)
-    return translated_text.text
-    
-                
-
-                
 def audio_versions(text, lan, iter):
     tts = gTTS(text=text, lang=lan)
     audio_path = f'recipe_{iter}.wav'
     tts.save(audio_path)
     return audio_path
+
