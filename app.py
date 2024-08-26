@@ -118,9 +118,9 @@ def main():
                                 cols = st.columns(recipe_count)
                                 for i, (recipe, col) in enumerate(zip(recipes, cols), 1):
                                     with col:
-                                        recipe_name = recipe.get('Recipe Name', 'Unnamed Recipe')
-                                        if recipe_name == 'Unnamed Recipe':
-                                            recipe_name = translation('Unnamed Recipe', lan_dict[language])
+                                        recipe_name = recipe.get('Recipe Name', '')
+                                        if not recipe_name or recipe_name == 'Unnamed Recipe':
+                                            recipe_name = translation(f'Recipe {i}', lan_dict[language])
                                         st.subheader(f"{recipe.get('Recipe Number', f'Recipe {i}')}: {recipe_name}")
                                         
                                         if 'Ingredients' in recipe:
