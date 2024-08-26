@@ -233,3 +233,6 @@ def audio_versions(text, lan, iter):
     audio_path = f'recipe_{iter}.wav'
     tts.save(audio_path)
     return audio_path
+
+# Make sure to export the translation function
+__all__ = ['main_model', 'message', 'upload', 'process_image_with_yolo', 'generate_recipe', 'audio_versions', 'translation']

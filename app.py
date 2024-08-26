@@ -13,7 +13,7 @@ from PIL import Image
 import base64
 import random
 import re
-from utils import main_model,message,upload,process_image_with_yolo,generate_recipe,audio_versions
+from utils import main_model,message,upload,process_image_with_yolo,generate_recipe,audio_versions,translation
 
 heading_styles = '''
     <style>
