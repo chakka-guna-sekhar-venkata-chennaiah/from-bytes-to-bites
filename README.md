@@ -10,7 +10,7 @@ Deep Learning & AI Generated Recipes
 ## 1. 🖊️ __Description__
 `From Bytes to Bites` is an software web application that generates recipes and its audio version is user interested language.
 ## 2. 🏗️ __Architecture__
-![image](https://github.com/chakka-guna-sekhar-venkata-chennaiah/from-bytes-to-bites/assets/110555361/3684a782-319c-4942-a719-ad4bb1096bd4)
+![image](https://github.com/user-attachments/assets/f384925e-6e24-4df3-bf78-47de01c01318)
 ## 3. ⚙️ __Local Setup__
 1. Setup an API KEY on [Google's Maker Suite]([text](https://aistudio.google.com/))
 2. Clone the repo
